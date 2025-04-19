@@ -7,7 +7,6 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-
 # Use absolute paths for config, logs, and position file
 CONFIG_PATH = "/home/user/automatic-file-change-notification/config/settings.conf"
 LOG_FILE = "/home/user/automatic-file-change-notification/logs/error.log"
