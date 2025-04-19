@@ -4,8 +4,8 @@
 # Enhanced Automation Script for Jenkins
 # -----------------------------------------
 
-# Set up paths
-WORKSPACE=${WORKSPACE:-/home/user/automatic-file-change-notification}
+# Step 0: Determine workspace path
+WORKSPACE=${WORKSPACE:-$(pwd)}
 LOG_FILE="$WORKSPACE/logs/automation.log"
 VENV_DIR="$WORKSPACE/myenv"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
@@ -28,13 +28,17 @@ mkdir -p "$WORKSPACE/logs"
 
 # Step 2: Create virtual environment if it doesn't exist
 if [ ! -d "$VENV_DIR" ]; then
-    log "🟠 Virtual environment not found. Creating one..."
+    log "🟠 Virtual environment not found. Creating one at $VENV_DIR..."
     python3 -m venv "$VENV_DIR" || error_exit "Failed to create virtual environment"
 fi
 
 # Step 3: Activate virtual environment
-log "🟢 Activating virtual environment..."
-source "$VENV_DIR/bin/activate" || error_exit "Failed to activate virtual environment"
+if [ -f "$VENV_DIR/bin/activate" ]; then
+    log "🟢 Activating virtual environment..."
+    source "$VENV_DIR/bin/activate" || error_exit "Failed to activate virtual environment"
+else
+    error_exit "Virtual environment activate script not found at $VENV_DIR/bin/activate"
+fi
 
 # Step 4: Upgrade pip
 log "⬆️  Upgrading pip..."
@@ -54,7 +58,7 @@ log "🔎 Verifying mysql-connector-python installation..."
 pip show mysql-connector-python >/dev/null || error_exit "mysql-connector-python is NOT installed!"
 
 # Step 7: Run log generator script
-LOG_GEN_SCRIPT="$WORKSPACE/src/log_generator.py"  # Updated to src
+LOG_GEN_SCRIPT="$WORKSPACE/src/log_generator.py"
 if [ -f "$LOG_GEN_SCRIPT" ]; then
     log "📝 Running log_generator.py..."
     python3 "$LOG_GEN_SCRIPT" || error_exit "log_generator.py failed"
@@ -63,7 +67,7 @@ else
 fi
 
 # Step 8: Run notifier script
-NOTIFIER_SCRIPT="$WORKSPACE/src/notifier.py"  # Updated to src
+NOTIFIER_SCRIPT="$WORKSPACE/src/notifier.py"
 if [ -f "$NOTIFIER_SCRIPT" ]; then
     log "📢 Running notifier.py..."
     python3 "$NOTIFIER_SCRIPT" || error_exit "notifier.py failed"
@@ -71,8 +75,8 @@ else
     error_exit "notifier.py not found at $NOTIFIER_SCRIPT"
 fi
 
-# Step 9: Deactivate virtual environment
+# Step 9: Deactivate virtual environment if available
 log "🛑 Deactivating virtual environment..."
-deactivate || log "⚠️ Failed to deactivate virtual environment (optional)."
+type deactivate &>/dev/null && deactivate || log "⚠️ Virtual environment wasn't active or deactivate failed."
 
 log "✅ Automation complete!"
