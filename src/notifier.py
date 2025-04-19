@@ -88,21 +88,32 @@ def render_html_report(build_number, commit_id, commit_message, commit_date, err
         error_logs=error_logs
     )
 
+
+
 def send_email_report(to_email, html_content):
     msg = MIMEMultipart("alternative")
     msg["Subject"] = "Build Error Report"
-    msg["From"] = "no-reply@notifier.local"
+    msg["From"] = "swathikagg0410@gmail.com"
     msg["To"] = to_email
 
     part = MIMEText(html_content, "html")
     msg.attach(part)
 
     try:
-        with smtplib.SMTP("localhost") as server:
-            server.send_message(msg)
-        print("✅ Email sent")
+        # Connect to Gmail SMTP server using TLS (port 587)
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()  # Start TLS encryption
+
+        # Login to the server with your Gmail credentials (use App Password here)
+        server.login("swathikagg0410@gmail.com", "qtrr elov pmcs rvhw")
+
+        # Send the email
+        server.sendmail("swathikagg0410@gmail.com", to_email, msg.as_string())
+        server.quit()
+        print("✅ Email sent successfully!")
     except Exception as e:
-        print("❌ Failed to send email:", e)
+        print(f"❌ Failed to send email: {e}")
+
 
 
 if __name__ == "__main__":
