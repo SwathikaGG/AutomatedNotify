@@ -1,5 +1,4 @@
 import time
-
 LOG_FILE = "/home/user/automatic-file-change-notification/logs/error.log"
 
 errors = [
