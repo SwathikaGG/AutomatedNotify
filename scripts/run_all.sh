@@ -8,6 +8,8 @@ LOG_FILE="logs/automation.log"
 VENV_DIR="$WORKSPACE/myenv"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M:%S")
 
+mkdir -p "$(dirname "$LOG_FILE")"
+
 log() {
     echo "[$TIMESTAMP] $1" | tee -a "$LOG_FILE"
 }
@@ -28,6 +30,7 @@ fi
 # Step 2: Activate virtual environment
 log "🟢 Activating Python virtual environment..."
 source "$VENV_DIR/bin/activate" || error_exit "Failed to activate virtual environment"
+log "🐍 Python version: $(python --version)"
 
 # Step 3: Install dependencies if requirements.txt exists
 if [ -f "$WORKSPACE/requirements.txt" ]; then
@@ -38,10 +41,12 @@ else
 fi
 
 # Step 4: Run log generator
+[ ! -f "$WORKSPACE/scripts/log_generator.py" ] && error_exit "log_generator.py not found"
 log "📝 Running log_generator.py..."
 python3 "$WORKSPACE/scripts/log_generator.py" || error_exit "log_generator.py failed"
 
 # Step 5: Run notifier
+[ ! -f "$WORKSPACE/src/notifier.py" ] && error_exit "notifier.py not found"
 log "📢 Running notifier.py..."
 python3 "$WORKSPACE/src/notifier.py" || error_exit "notifier.py failed"
 
