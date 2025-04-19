@@ -2,3 +2,15 @@
 [ERROR] 2025-04-18 10:10:00 - Connection timeout
 [ERROR] 2025-04-18 10:15:00 - Invalid input detected
 echo "[ERROR] Test error from notifier" >> logs/error.log
+[ERROR] 2025-04-19 16:45:00 - File not found
+[ERROR] 2025-04-19 17:46:00 - Unexpected null value
+[ERROR] 2025-04-19 19:47:00 - Timeout while processing request
+[ERROR] 2025-04-19 16:45:00 - File not found
+[ERROR] 2025-04-19 17:46:00 - Unexpected null value
+[ERROR] 2025-04-19 19:47:00 - Timeout while processing request
+[ERROR] 2025-04-19 16:45:00 - File not found
+[ERROR] 2025-04-19 17:46:00 - Unexpected null value
+[ERROR] 2025-04-19 19:47:00 - Timeout while processing request
+[ERROR] 2025-04-19 16:45:00 - File not found
+[ERROR] 2025-04-19 17:46:00 - Unexpected null value
+[ERROR] 2025-04-19 19:47:00 - Timeout while processing request
