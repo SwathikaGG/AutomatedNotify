@@ -25,6 +25,8 @@ log "🚀 Starting Automation Script..."
 if [ ! -d "$VENV_DIR" ]; then
     log "🟠 Virtual environment not found. Creating a new one..."
     python3 -m venv "$VENV_DIR" || error_exit "Failed to create virtual environment"
+    [ ! -d "$VENV_DIR" ] && error_exit "Virtual environment creation failed"
+
 fi
 
 # Step 2: Activate virtual environment
