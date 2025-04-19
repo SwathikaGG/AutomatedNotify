@@ -20,16 +20,29 @@ def load_config():
         return {}
 
 
-
-
-
 def connect_db(config):
+    try:
+        conn = mysql.connector.connect(
+            host=config["database_url"],
+            user=config["database_user"],
+            password=config["database_password"],
+            database=config["database_name"]
+        )
+        print("✅ DB Connection successful")
+        return conn
+    except mysql.connector.Error as err:
+        print("❌ DB Connection failed:", err)
+        raise
+
+
+
+'''def connect_db(config):
     return mysql.connector.connect(
         host=config["database_url"],
         user=config["database_user"],
         password=config["database_password"],
         database=config["database_name"]
-    )
+    )'''
 
 
 def parse_new_errors():
