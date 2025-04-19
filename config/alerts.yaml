@@ -1,0 +1,10 @@
+# Email alert settings
+email:
+  enabled: true
+  sender: "swathikagg0410@gmail.com"
+  recipients:
+    - "advikaroy147@gmail.com"
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  username: "swathikagg0410@gmail.com"
+  password: "qtrr elov pmcs rvhw"

@@ -1,0 +1,7 @@
+# Sample configuration file
+app_name: "LogNotifier"
+version: "1.0.0"
+logging:
+  level: "info"
+  file: "logs/app.log"
+error_log: "logs/error.log"
