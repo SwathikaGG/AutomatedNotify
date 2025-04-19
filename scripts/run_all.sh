@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-#!/bin/bash
-source /home/user/myenv/bin/activate
-python /home/user/automatic-file-change-notification/scripts/log_generator.py
-python /home/user/automatic-file-change-notification/src/notifier.py
-deactivate
-=======
 #!/bin/bash
 
 # -----------------------------------------
@@ -36,11 +29,13 @@ fi
 
 # Step 2: Run log generator
 log "📝 Running log_generator.py..."
-python3 src/log_generator.py || error_exit "log_generator.py failed"
+python3 $WORKSPACE/scripts/log_generator.py || error_exit "log_generator.py failed"
 
 # Step 3: Run notifier
 log "📢 Running notifier.py..."
-python3 src/notifier.py || error_exit "notifier.py failed"
+python3 $WORKSPACE/src/notifier.py || error_exit "notifier.py failed"
 
 log "✅ Automation complete!"
->>>>>>> 8a1c0b0 (Enhance run_all.sh with error handling, logging, and robustness)
+
+# Deactivate the virtual environment
+deactivate
