@@ -54,7 +54,7 @@ log "🔎 Verifying mysql-connector-python installation..."
 pip show mysql-connector-python >/dev/null || error_exit "mysql-connector-python is NOT installed!"
 
 # Step 7: Run log generator script
-LOG_GEN_SCRIPT="$WORKSPACE/scripts/log_generator.py"
+LOG_GEN_SCRIPT="$WORKSPACE/src/log_generator.py"  # Updated to src
 if [ -f "$LOG_GEN_SCRIPT" ]; then
     log "📝 Running log_generator.py..."
     python3 "$LOG_GEN_SCRIPT" || error_exit "log_generator.py failed"
@@ -63,7 +63,7 @@ else
 fi
 
 # Step 8: Run notifier script
-NOTIFIER_SCRIPT="$WORKSPACE/src/notifier.py"
+NOTIFIER_SCRIPT="$WORKSPACE/src/notifier.py"  # Updated to src
 if [ -f "$NOTIFIER_SCRIPT" ]; then
     log "📢 Running notifier.py..."
     python3 "$NOTIFIER_SCRIPT" || error_exit "notifier.py failed"
