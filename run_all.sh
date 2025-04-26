@@ -109,7 +109,16 @@ else
     error_exit "trivy_parser.py not found at $TRIVY_PARSER_SCRIPT"
 fi
 
-# Step 11: Deactivate virtual environment if available
+# Step 11: Generate HTML report
+REPORT_GEN_SCRIPT="$WORKSPACE/src/generate_report.py"
+if [ -f "$REPORT_GEN_SCRIPT" ]; then
+    log "📝 Generating report.html from database..."
+    python3 "$REPORT_GEN_SCRIPT" || error_exit "generate_report.py failed"
+else
+    error_exit "generate_report.py not found at $REPORT_GEN_SCRIPT"
+fi
+
+# Step 12: Deactivate virtual environment if available
 log "🛑 Deactivating virtual environment..."
 type deactivate &>/dev/null && deactivate || log "⚠️ Virtual environment wasn't active or deactivate failed."
 
