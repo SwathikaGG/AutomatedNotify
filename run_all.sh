@@ -79,26 +79,26 @@ if [ -z "$WORKSPACE" ]; then
   WORKSPACE="/var/lib/jenkins/workspace/AutomaticNotify"
 fi
 
-TRIVY_PATH_TO_SCAN="$WORKSPACE"
 TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
 
 # Download Trivy DB if needed
 log "🔄 Ensuring Trivy vulnerability database is available..."
 trivy image --download-db-only || error_exit "Failed to download Trivy DB"
 
-log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
+# Move into workspace to make scanning easier
+log "🔍 Running Trivy filesystem scan inside workspace..."
+cd "$WORKSPACE" || error_exit "Workspace directory not found."
+
 trivy fs --offline --severity CRITICAL,HIGH,MEDIUM \
-  --skip-dirs "$WORKSPACE/myenv" \
-  --skip-dirs "$WORKSPACE/logs" \
-  --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
+  --skip-dirs myenv \
+  --skip-dirs logs \
+  --format json . > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
 
 if [ $? -eq 0 ]; then
     log "🧪 Trivy scan completed. Report saved to $TRIVY_OUTPUT"
 else
     error_exit "Trivy scan failed. Skipping parsing step."
 fi
-
-
 
 # Step 10: Parse Trivy vulnerabilities
 TRIVY_PARSER_SCRIPT="$WORKSPACE/src/trivy_parser.py"
