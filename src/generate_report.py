@@ -21,6 +21,7 @@ cursor = conn.cursor(dictionary=True)
 
 cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, severity, title FROM trivy_vulnerabilities")
 vulnerabilities = cursor.fetchall()
+print(vulnerabilities)
 
 cursor.close()
 conn.close()
