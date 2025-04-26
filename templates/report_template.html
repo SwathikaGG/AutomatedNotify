@@ -12,6 +12,18 @@
         }
         h1 { text-align: center; }
         .error { color: red; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
@@ -22,7 +34,6 @@
     <p><strong>Commit Message:</strong> {{ commit_message }}</p>
     <p><strong>Commit Date:</strong> {{ commit_date }}</p>
 
-   
     <h3>Error Logs:</h3>
     {% if error_logs %}
         <ul>
@@ -40,23 +51,23 @@
     <table>
         <thead>
             <tr class="header">
-                <th>ID</th>
+                <th>Target</th>
                 <th>Package</th>
                 <th>Installed Version</th>
-                <th>Fixed Version</th>
+                <th>Vulnerability ID</th>
                 <th>Severity</th>
-                <th>Description</th>
+                <th>Title</th>
             </tr>
         </thead>
         <tbody>
         {% for vuln in vulnerabilities %}
             <tr>
-                <td>{{ vuln.VulnerabilityID }}</td>
-                <td>{{ vuln.PkgName }}</td>
-                <td>{{ vuln.InstalledVersion }}</td>
-                <td>{{ vuln.FixedVersion }}</td>
-                <td class="{{ 'error' if vuln.Severity in ['CRITICAL', 'HIGH'] else '' }}">{{ vuln.Severity }}</td>
-                <td>{{ vuln.Description }}</td>
+                <td>{{ vuln.target }}</td>
+                <td>{{ vuln.pkg_name }}</td>
+                <td>{{ vuln.installed_version }}</td>
+                <td>{{ vuln.vulnerability_id }}</td>
+                <td class="{{ 'error' if vuln.severity in ['CRITICAL', 'HIGH'] else '' }}">{{ vuln.severity }}</td>
+                <td>{{ vuln.title }}</td>
             </tr>
         {% endfor %}
         </tbody>
@@ -64,11 +75,5 @@
     {% else %}
     <p>No vulnerabilities found.</p>
     {% endif %}
-    
-    
-    
-
-
-
 </body>
 </html>
