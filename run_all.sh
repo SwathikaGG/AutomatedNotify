@@ -74,8 +74,31 @@ if [ -f "$NOTIFIER_SCRIPT" ]; then
 else
     error_exit "notifier.py not found at $NOTIFIER_SCRIPT"
 fi
+# Step 9: Run Trivy filesystem scan (offline)
 
-# Step 9: Deactivate virtual environment if available
+TRIVY_PATH_TO_SCAN="$WORKSPACE"  # You can adjust this path if needed
+TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
+
+log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
+trivy fs --offline --severity CRITICAL,HIGH,MEDIUM --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
+
+
+
+if [ $? -eq 0 ]; then
+    log "🧪 Trivy scan completed. Report saved to $TRIVY_OUTPUT"
+else
+    log "⚠️ Trivy scan failed. Check log for details."
+fi
+# Step 10: Parse Trivy vulnerabilities
+TRIVY_PARSER_SCRIPT="$WORKSPACE/src/trivy_parser.py"
+if [ -f "$TRIVY_PARSER_SCRIPT" ]; then
+    log "📋 Parsing Trivy vulnerabilities and inserting into MySQL..."
+    python3 "$TRIVY_PARSER_SCRIPT" || error_exit "trivy_parser.py failed"
+else
+    error_exit "trivy_parser.py not found at $TRIVY_PARSER_SCRIPT"
+fi
+
+# Step 11: Deactivate virtual environment if available
 log "🛑 Deactivating virtual environment..."
 type deactivate &>/dev/null && deactivate || log "⚠️ Virtual environment wasn't active or deactivate failed."
 
