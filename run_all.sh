@@ -89,7 +89,7 @@ trivy image --download-db-only || error_exit "Failed to download Trivy DB"
 log "🔍 Running Trivy filesystem scan inside workspace..."
 cd "$WORKSPACE" || error_exit "Workspace directory not found."
 
-trivy fs --offline --severity CRITICAL,HIGH,MEDIUM \
+trivy fs  --severity CRITICAL,HIGH,MEDIUM \
   --skip-dirs myenv \
   --skip-dirs logs \
   --format json . > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
