@@ -6,6 +6,7 @@ from jinja2 import Environment, FileSystemLoader
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import json
 
 # Use absolute paths for config, logs, and position file
 CONFIG_PATH = "/home/user/automatic-file-change-notification/config/settings.conf"
@@ -13,6 +14,11 @@ LOG_FILE = "/home/user/automatic-file-change-notification/logs/error.log"
 LAST_POS_FILE = "/home/user/automatic-file-change-notification/logs/last_pos.txt"
 TEMPLATE_DIR = "/home/user/automatic-file-change-notification/templates"
 TEMPLATE_FILE = "report_template.html"
+# Dynamically get Jenkins workspace
+workspace_path = os.getenv("WORKSPACE", "/home/user/automatic-file-change-notification")
+
+# Path to the Trivy scan JSON inside the workspace
+VULNERABILITY_FILE = os.path.join(workspace_path, "trivy_scan_report.json")
 
 def load_config():
     parser = ConfigParser()
@@ -76,7 +82,37 @@ def insert_errors_to_db(errors, db_conn):
     db_conn.commit()
     cursor.close()
 
-def render_html_report(build_number, commit_id, commit_message, commit_date, error_logs):
+# 🚀 NEW FUNCTION: Parse vulnerabilities from MySQL (instead of JSON file)
+def parse_vulnerability_scan_from_db(db_conn):
+    cursor = db_conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT 
+            vulnerability_id, 
+            pkg_name, 
+            installed_version, 
+            '' AS fixed_version, 
+            severity, 
+            title AS description 
+        FROM trivy_vulnerabilities
+    """)
+    vulnerabilities = cursor.fetchall()
+    cursor.close()
+
+    formatted_vulns = []
+    for vuln in vulnerabilities:
+        formatted_vulns.append({
+            "VulnerabilityID": vuln['vulnerability_id'],
+            "PkgName": vuln['pkg_name'],
+            "InstalledVersion": vuln['installed_version'],
+            "FixedVersion": vuln['fixed_version'],  # Empty string (you don't have it in DB)
+            "Severity": vuln['severity'],
+            "Description": vuln['description']
+        })
+
+    return formatted_vulns
+
+
+def render_html_report(build_number, commit_id, commit_message, commit_date, error_logs,vulnerabilities):
     env = Environment(loader=FileSystemLoader(TEMPLATE_DIR))
     template = env.get_template(TEMPLATE_FILE)
     return template.render(
@@ -84,7 +120,8 @@ def render_html_report(build_number, commit_id, commit_message, commit_date, err
         commit_id=commit_id,
         commit_message=commit_message,
         commit_date=commit_date,
-        error_logs=error_logs
+        error_logs=error_logs,
+        vulnerabilities=vulnerabilities
     )
 
 
@@ -120,9 +157,13 @@ if __name__ == "__main__":
     config = load_config()
     db_conn = connect_db(config)
     errors = parse_new_errors()
-    if errors:
-        print(f"Found {len(errors)} new error(s). Inserting to DB...")
-        insert_errors_to_db(errors, db_conn)
+
+    vulnerabilities= parse_vulnerability_scan_from_db(db_conn)
+
+    if errors or vulnerabilities :
+        if errors:
+            print(f"Found {len(errors)} new error(s). Inserting to DB...")
+            insert_errors_to_db(errors, db_conn)
         
 
 # Get environment variables (can be set by Jenkins or manually)
@@ -132,7 +173,7 @@ if __name__ == "__main__":
         commit_date = os.getenv("GIT_COMMIT_DATE", "N/A")
 
 # Render HTML report using Jinja2
-        html_report = render_html_report(build_number, commit_id, commit_message, commit_date, errors)
+        html_report = render_html_report(build_number, commit_id, commit_message, commit_date, errors,vulnerabilities)
 
 # Send the report via email
         send_email_report(config.get("email_to", "admin@example.com"), html_report)

@@ -22,6 +22,7 @@
     <p><strong>Commit Message:</strong> {{ commit_message }}</p>
     <p><strong>Commit Date:</strong> {{ commit_date }}</p>
 
+   
     <h3>Error Logs:</h3>
     {% if error_logs %}
         <ul>
@@ -32,5 +33,42 @@
     {% else %}
         <p>No errors found in this build.</p>
     {% endif %}
+    
+    <h3>Vulnerability Scan Results:</h3>
+
+    {% if vulnerabilities %}
+    <table>
+        <thead>
+            <tr class="header">
+                <th>ID</th>
+                <th>Package</th>
+                <th>Installed Version</th>
+                <th>Fixed Version</th>
+                <th>Severity</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for vuln in vulnerabilities %}
+            <tr>
+                <td>{{ vuln.VulnerabilityID }}</td>
+                <td>{{ vuln.PkgName }}</td>
+                <td>{{ vuln.InstalledVersion }}</td>
+                <td>{{ vuln.FixedVersion }}</td>
+                <td class="{{ 'error' if vuln.Severity in ['CRITICAL', 'HIGH'] else '' }}">{{ vuln.Severity }}</td>
+                <td>{{ vuln.Description }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No vulnerabilities found.</p>
+    {% endif %}
+    
+    
+    
+
+
+
 </body>
 </html>
