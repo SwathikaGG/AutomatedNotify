@@ -76,8 +76,13 @@ fi
 # Step 9: Run Trivy filesystem scan (offline)
 
 
-TRIVY_PATH_TO_SCAN="/home/user/automatic-file-change-notification"
-TRIVY_OUTPUT="/home/user/automatic-file-change-notification/logs/trivy_scan_report.json"
+# Set default WORKSPACE if not set
+if [ -z "$WORKSPACE" ]; then
+  WORKSPACE="/var/lib/jenkins/workspace/AutomaticNotify"
+fi
+
+TRIVY_PATH_TO_SCAN="$WORKSPACE"
+TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
 
 log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
 trivy fs --offline --severity CRITICAL,HIGH,MEDIUM --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
@@ -87,6 +92,7 @@ if [ $? -eq 0 ]; then
 else
     log "⚠️ Trivy scan failed. Check log for details."
 fi
+
 
 '''# Set default WORKSPACE if not set
 if [ -z "$WORKSPACE" ]; then
