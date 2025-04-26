@@ -76,8 +76,6 @@ else
 fi
 # Step 9: Run Trivy filesystem scan (offline)
 
-
-# Set default WORKSPACE if not set
 if [ -z "$WORKSPACE" ]; then
   WORKSPACE="/var/lib/jenkins/workspace/AutomaticNotify"
 fi
@@ -86,7 +84,10 @@ TRIVY_PATH_TO_SCAN="$WORKSPACE"
 TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
 
 log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
-trivy fs --offline --severity CRITICAL,HIGH,MEDIUM --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
+trivy fs --offline --severity CRITICAL,HIGH,MEDIUM \
+  --skip-dirs "$WORKSPACE/myenv" \
+  --skip-dirs "$WORKSPACE/logs" \
+  --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
 
 if [ $? -eq 0 ]; then
     log "🧪 Trivy scan completed. Report saved to $TRIVY_OUTPUT"
@@ -95,23 +96,6 @@ else
 fi
 
 
-'''# Set default WORKSPACE if not set
-if [ -z "$WORKSPACE" ]; then
-  WORKSPACE="/home/user/automatic-file-change-notification"
-fi
-
-TRIVY_PATH_TO_SCAN="$WORKSPACE"
-TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
-
-log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
-trivy fs --offline --severity CRITICAL,HIGH,MEDIUM --format json "$TRIVY_PATH_TO_SCAN" > "$TRIVY_OUTPUT" 2>>"$LOG_FILE"
-
-
-if [ $? -eq 0 ]; then
-    log "🧪 Trivy scan completed. Report saved to $TRIVY_OUTPUT"
-else
-    log "⚠️ Trivy scan failed. Check log for details."
-fi'''
 
 # Step 10: Parse Trivy vulnerabilities
 TRIVY_PARSER_SCRIPT="$WORKSPACE/src/trivy_parser.py"
