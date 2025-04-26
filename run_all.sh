@@ -3,6 +3,7 @@
 # -----------------------------------------
 # Enhanced Automation Script for Jenkins
 # -----------------------------------------
+
 # Step 0: Determine workspace path
 WORKSPACE=${WORKSPACE:-$(pwd)}
 LOG_FILE="$WORKSPACE/logs/automation.log"
