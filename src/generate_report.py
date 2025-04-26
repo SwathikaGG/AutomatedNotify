@@ -1,27 +1,52 @@
 import os
+import mysql.connector
 from jinja2 import Environment, FileSystemLoader
 
-# Set the path to your templates directory
+# Set up template directory
 template_dir = os.path.join(os.path.dirname(__file__), '..', 'templates')
-
-# Create an environment and tell Jinja2 where to look for templates
 env = Environment(loader=FileSystemLoader(template_dir))
-
-# Load the template
 template = env.get_template('report_template.html')
 
-# Data to be passed into the template
-data = {
-    'error_logs': 'Example error log content...',
-    'build_info': 'Build number 26...',
-    'commit_details': 'Git commit: abc123...',
+# Load DB config manually (improve later to use config file if needed)
+config = {
+    "host": "localhost",
+    "user": "root",
+    "password": "admin",
+    "database": "logscanner"
 }
 
-# Render the template with data
-html_output = template.render(data)
+# Connect to MySQL and fetch vulnerabilities
+conn = mysql.connector.connect(**config)
+cursor = conn.cursor(dictionary=True)
 
-# Save the generated HTML to a file
-with open('report.html', 'w') as f:
+cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, severity, title FROM trivy_vulnerabilities")
+vulnerabilities = cursor.fetchall()
+
+cursor.close()
+conn.close()
+
+# Fetch from environment variables (not dummy values)
+build_number = os.getenv("BUILD_NUMBER", "N/A")
+commit_id = os.getenv("GIT_COMMIT", "N/A")
+commit_message = os.getenv("GIT_COMMIT_MSG", "N/A")
+commit_date = os.getenv("GIT_COMMIT_DATE", "N/A")
+
+# Simulating error logs (you can connect to DB or file if needed)
+error_logs = ["Sample error line 1", "Sample error line 2"]
+
+# Render the template
+html_output = template.render(
+    build_number=build_number,
+    commit_id=commit_id,
+    commit_message=commit_message,
+    commit_date=commit_date,
+    error_logs=error_logs,
+    vulnerabilities=vulnerabilities
+)
+
+# Save to file
+output_file = os.path.join(os.path.dirname(__file__), 'report.html')
+with open(output_file, 'w') as f:
     f.write(html_output)
 
-print("Report generated successfully!")
+print("✅ Report generated successfully from database and real Jenkins environment!")
