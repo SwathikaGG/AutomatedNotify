@@ -22,6 +22,10 @@ cursor = conn.cursor(dictionary=True)
 cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, severity, title FROM trivy_vulnerabilities")
 vulnerabilities = cursor.fetchall()
 print(vulnerabilities)
+# Fetch real error logs from database
+cursor.execute("SELECT error_message FROM error_logs ORDER BY timestamp DESC")
+error_logs_records = cursor.fetchall()
+error_logs = [record['error_message'] for record in error_logs_records]
 
 cursor.close()
 conn.close()
@@ -29,18 +33,14 @@ conn.close()
 # Fetch from environment variables (not dummy values)
 build_number = os.getenv("BUILD_NUMBER", "N/A")
 commit_id = os.getenv("GIT_COMMIT", "N/A")
-commit_message = os.getenv("GIT_COMMIT_MSG", "N/A")
-commit_date = os.getenv("GIT_COMMIT_DATE", "N/A")
 
-# Simulating error logs (you can connect to DB or file if needed)
-error_logs = ["Sample error line 1", "Sample error line 2"]
+
+
 
 # Render the template
 html_output = template.render(
     build_number=build_number,
     commit_id=commit_id,
-    commit_message=commit_message,
-    commit_date=commit_date,
     error_logs=error_logs,
     vulnerabilities=vulnerabilities
 )

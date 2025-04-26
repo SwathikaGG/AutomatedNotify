@@ -5,11 +5,11 @@ LOG_FILE = "/home/user/automatic-file-change-notification/logs/error.log"
 LAST_POS_FILE = "/home/user/automatic-file-change-notification/logs/last_pos.txt"
 
 errors = [
-    "[ERROR] 2025-04-19 16:00:00 - File not found",
-    "[ERROR] 2025-04-20 17:00:00 - Unexpected null value",
-    "[ERROR] 2025-04-20 19:12:00 - Timeout while processing request",
-    "[ERROR] 2025-04-21 09:30:00 - Invalid input data",
-    "[ERROR] 2025-04-21 11:00:00 - Connection timeout"
+    "[ERROR]  - File not found",
+    "[ERROR]  - Unexpected null value",
+    "[ERROR]  - Timeout while processing request",
+    "[ERROR]  - Invalid input data",
+    "[ERROR]  - Connection timeout"
 ]
 
 def append_errors():
