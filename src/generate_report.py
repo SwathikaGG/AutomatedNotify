@@ -24,7 +24,7 @@ vulnerabilities = cursor.fetchall()
 print(vulnerabilities)
 # Fetch real error logs from database
 # Fetch error logs from database
-cursor.execute("SELECT error_message, timestamp FROM error_logs ORDER BY timestamp DESC")
+cursor.execute("SELECT error_message, timestamp FROM error_logs ORDER BY timestamp DESC LIMIT 15")
 error_logs_records = cursor.fetchall()
 
 # Prepare list with timestamp + error message
