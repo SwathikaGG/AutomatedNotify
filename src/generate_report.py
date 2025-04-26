@@ -23,7 +23,7 @@ cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, se
 vulnerabilities = cursor.fetchall()
 print(vulnerabilities)
 # Fetch real error logs from database
-cursor.execute("SELECT error_message FROM error_logs ORDER BY timestamp DESC")
+cursor.execute("SELECT error_message FROM error_logs ORDER BY timestamp DESC LIMIT 10")
 error_logs_records = cursor.fetchall()
 error_logs = [record['error_message'] for record in error_logs_records]
 
