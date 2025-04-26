@@ -73,7 +73,7 @@ if [ -f "$NOTIFIER_SCRIPT" ]; then
 else
     error_exit "notifier.py not found at $NOTIFIER_SCRIPT"
 fi
-# Step 9: Run Trivy filesystem scan (offline)
+# Step 9: Ensure Trivy DB is available & Run Trivy filesystem scan (offline)
 
 if [ -z "$WORKSPACE" ]; then
   WORKSPACE="/var/lib/jenkins/workspace/AutomaticNotify"
@@ -81,6 +81,10 @@ fi
 
 TRIVY_PATH_TO_SCAN="$WORKSPACE"
 TRIVY_OUTPUT="$WORKSPACE/logs/trivy_scan_report.json"
+
+# Download Trivy DB if needed
+log "🔄 Ensuring Trivy vulnerability database is available..."
+trivy image --download-db-only || error_exit "Failed to download Trivy DB"
 
 log "🔍 Running Trivy filesystem scan on $TRIVY_PATH_TO_SCAN..."
 trivy fs --offline --severity CRITICAL,HIGH,MEDIUM \
@@ -91,7 +95,7 @@ trivy fs --offline --severity CRITICAL,HIGH,MEDIUM \
 if [ $? -eq 0 ]; then
     log "🧪 Trivy scan completed. Report saved to $TRIVY_OUTPUT"
 else
-    log "⚠️ Trivy scan failed. Check log for details."
+    error_exit "Trivy scan failed. Skipping parsing step."
 fi
 
 
