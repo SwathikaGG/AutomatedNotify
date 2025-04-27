@@ -1,9 +1,9 @@
 # Jenkins-Driven Automated Vulnerability Detection, Error Monitoring, and Notification Pipeline with MySQL and Trivy Integration
 
-# #Project Overview
+# Project Overview
 This project is an automated pipeline that integrates Jenkins, MySQL, and Trivy for vulnerability detection, error monitoring, and notifications. It is designed to detect vulnerabilities in source code, track errors, and notify developers promptly. The system leverages the power of Jenkins for automation, MySQL for storing logs and vulnerability data, and Trivy for scanning repositories or file systems for vulnerabilities.
 
-# #Key Features:
+# Key Features:
 
 Automated Vulnerability Scanning using Trivy for fast and efficient detection.
 
@@ -17,7 +17,7 @@ HTML Report Generation summarizing the vulnerabilities and errors found.
 
 MySQL Database for storing error logs and vulnerability data for reporting and analysis.
 
-# #Technologies Used
+# Technologies Used
 
 Jenkins: Continuous integration and automation tool.
 
