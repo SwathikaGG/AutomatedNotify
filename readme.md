@@ -1,21 +1,34 @@
-# Automatic User Notification on File Changes
+# Jenkins-Driven Automated Vulnerability Detection, Error Monitoring, and Notification Pipeline with MySQL and Trivy Integration
 
-This repository contains files that will be monitored for changes. 
+# #Project Overview
+This project is an automated pipeline that integrates Jenkins, MySQL, and Trivy for vulnerability detection, error monitoring, and notifications. It is designed to detect vulnerabilities in source code, track errors, and notify developers promptly. The system leverages the power of Jenkins for automation, MySQL for storing logs and vulnerability data, and Trivy for scanning repositories or file systems for vulnerabilities.
 
-- `config/`: Configuration files for the app.
-- `logs/`: Log files generated during the application run.
+# #Key Features:
 
-The project uses Jenkins to monitor changes in these files and notify users when a change is detected.
+Automated Vulnerability Scanning using Trivy for fast and efficient detection.
 
-## Files:
+Error Log Monitoring through custom Python scripts that simulate errors and store them in MySQL.
 
-- `config/config.yaml`: App configuration settings.
-- `config/settings.conf`: App-specific settings.
-- `logs/app.log`: Application logs.
-- `logs/error.log`: Error logs.
+Email Notifications alerting developers about vulnerabilities and errors.
 
-## How to Use
+Jenkins Integration for seamless, continuous execution of the entire pipeline.
 
-1. Make changes to any of the files in `config/` or `logs/`.
-2. Jenkins will automatically detect the changes and send a notification (via email or Slack).
+HTML Report Generation summarizing the vulnerabilities and errors found.
 
+MySQL Database for storing error logs and vulnerability data for reporting and analysis.
+
+# #Technologies Used
+
+Jenkins: Continuous integration and automation tool.
+
+MySQL: Database for storing error logs and vulnerabilities.
+
+Trivy: Fast and simple vulnerability scanner for repositories and file systems.
+
+Python: Scripting language for automation and error handling.
+
+Bash: Shell scripting for task automation (run_all.sh, trivy_scanner.sh).
+
+HTML: Used for generating reports for the developer.
+
+SMTP: For sending email notifications.
