@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Build Error Report</title>
+    <title>Build Report</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -68,7 +68,7 @@
 </head>
 <body>
 
-    <h1>🚀 Build Error Report</h1>
+    <h1> Vulnerability Scan and Error Report</h1>
 
     <div class="section">
         <h3>Build Info</h3>
@@ -83,12 +83,12 @@
                 <div class="error-log">{{ error }}</div>
             {% endfor %}
         {% else %}
-            <p>No errors found in this build. 🎉</p>
+            <p>No errors found in this build.</p>
         {% endif %}
     </div>
 
     <div class="section">
-        <h3>Vulnerability Scan Results</h3>
+        <h3>Vulnerability Scan Results (TRIVY SCAN)</h3>
         {% if vulnerabilities %}
         <table>
             <thead>
@@ -115,7 +115,7 @@
             </tbody>
         </table>
         {% else %}
-        <p>No vulnerabilities found. 🎉</p>
+        <p>No vulnerabilities found. </p>
         {% endif %}
     </div>
 
