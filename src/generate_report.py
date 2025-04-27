@@ -19,12 +19,12 @@ config = {
 conn = mysql.connector.connect(**config)
 cursor = conn.cursor(dictionary=True)
 
-cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, severity, title FROM trivy_vulnerabilities")
+cursor.execute("SELECT target, pkg_name, installed_version, vulnerability_id, severity, title FROM trivy_vulnerabilities ORDER BY timestamp DESC LIMIT 1")
 vulnerabilities = cursor.fetchall()
 print(vulnerabilities)
 # Fetch real error logs from database
 # Fetch error logs from database
-cursor.execute("SELECT error_message, timestamp FROM error_logs ORDER BY timestamp DESC LIMIT 15")
+cursor.execute("SELECT error_message, timestamp FROM error_logs ORDER BY timestamp DESC LIMIT 4")
 error_logs_records = cursor.fetchall()
 
 # Prepare list with timestamp + error message
